@@ -1,0 +1,110 @@
+table amzn_raw_data
+	lineageTag: 21008585-fc1f-483d-b65f-7ecf337e7193
+
+	column date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: afc7b9cd-e190-42a6-bae1-81f25f2a9a03
+		summarizeBy: none
+		sourceColumn: date
+
+		variation Variation
+			isDefault
+			relationship: 7d997596-486c-4639-b4c3-62da53482ca3
+			defaultHierarchy: LocalDateTable_cad0a8cc-7dc9-44e0-bec0-7f637ef512ff.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column open
+		dataType: double
+		lineageTag: 6e7c5a1d-307c-48b7-8c7a-acf1e04b3a6d
+		summarizeBy: sum
+		sourceColumn: open
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column high
+		dataType: double
+		lineageTag: 13156613-172a-433c-9f03-8d8246805aa3
+		summarizeBy: sum
+		sourceColumn: high
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column low
+		dataType: double
+		lineageTag: 82b70a70-8fea-4301-b77d-1341b65260be
+		summarizeBy: sum
+		sourceColumn: low
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column close
+		dataType: double
+		lineageTag: 07e13682-8255-41b5-812d-98b6cbf95bda
+		summarizeBy: sum
+		sourceColumn: close
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column volume
+		dataType: int64
+		formatString: 0
+		lineageTag: 88aeeb44-f3c0-4d4a-ab3e-24b092194926
+		summarizeBy: sum
+		sourceColumn: volume
+
+		annotation SummarizationSetBy = Automatic
+
+	column adjusted_close
+		dataType: double
+		lineageTag: 614ea38d-edaa-4cee-831e-d050624cb836
+		summarizeBy: sum
+		sourceColumn: adjusted_close
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column change_percent
+		dataType: double
+		lineageTag: 3b9baa82-6efe-4bd2-89fc-ab26dd10b8a5
+		summarizeBy: sum
+		sourceColumn: change_percent
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column avg_vol_20d
+		dataType: double
+		lineageTag: d1813e58-54e6-44d6-aa81-ed2fc45925f3
+		summarizeBy: sum
+		sourceColumn: avg_vol_20d
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition amzn_raw_data = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\Project\PBITraining\amzn_raw_data.csv"),[Delimiter=",", Columns=9, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"date", type date}, {"open", type number}, {"high", type number}, {"low", type number}, {"close", type number}, {"volume", Int64.Type}, {"adjusted_close", type number}, {"change_percent", type number}, {"avg_vol_20d", type number}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+
